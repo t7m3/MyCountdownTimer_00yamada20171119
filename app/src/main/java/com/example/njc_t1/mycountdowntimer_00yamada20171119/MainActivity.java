@@ -1,5 +1,6 @@
 package com.example.njc_t1.mycountdowntimer_00yamada20171119;
 
+import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -74,6 +75,22 @@ public class MainActivity extends AppCompatActivity {
             mTimer.start();         //タイマをスタートさせる
             mFab.setImageResource(R.drawable.ic_stop_black_24dp); //ボタンをstopに変える
         }
+    }
+
+    @Override
+    //アクティビティが画面に表示された時に実行されるメソッド
+    protected void onResume() {
+        super.onResume(); //親クラスのコンストラクタを呼び出す
+        mSoundPool = new SoundPool(2, AudioManager.STREAM_ALARM, 0); //SoundPoolクラスのインスタンスの生成
+        mSoundResId = mSoundPool.load(this,R.raw.bellsound, 1); //サウンドリソース(bellsound.ogg)の読み込み
+
+    }
+
+    @Override
+    //アクティビティが非表示になったときに実行されるメソッド
+    protected void onPause() {
+        super.onPause(); //親クラスのコンストラクタを呼び出す
+        mSoundPool.release(); //メモリの解放
     }
 
 }
