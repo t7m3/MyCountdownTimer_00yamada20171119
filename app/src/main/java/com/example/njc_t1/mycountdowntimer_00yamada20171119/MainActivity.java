@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
@@ -50,9 +51,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    //起動時に自動実行されるメソッド
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        super.onCreate(savedInstanceState); //親クラスのコンストラクタを呼び出す
+        setContentView(R.layout.activity_main); //activity_mainを表示する。
+
+        mTimerText = (TextView) findViewById(R.id.timer_text); //TextViewの参照値を取得する。findViewById()メソッドで。
+        mTimerText.setText("3:00"); //TextViewの表示の初期値の設定
+        mTimer = new MyCountDownTimer(1* 60 * 1000, 100); //タイマのインスタンスの生成
+    }
+
+    public void onClick(View v) {
+
+        mFab = (FloatingActionButton) findViewById(R.id.play_stop);
+                        //FloatingActionButtonの参照値を取得する。findViewById()メソッドで。
+        if (mTimer.isRunning) { //タイマが動作中なら
+            mTimer.isRunning = false;
+            mTimer.cancel();         //タイマを止める
+            mFab.setImageResource(R.drawable.ic_play_arrow_black_24dp); //ボタンをplayに変える
+        } else {                 //タイマが停止中なら
+            mTimer.isRunning = true;
+            mTimer.start();         //タイマをスタートさせる
+            mFab.setImageResource(R.drawable.ic_stop_black_24dp); //ボタンをstopに変える
+        }
     }
 
 }
