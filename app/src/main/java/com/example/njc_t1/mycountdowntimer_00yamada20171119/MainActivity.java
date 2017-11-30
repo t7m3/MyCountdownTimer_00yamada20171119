@@ -8,7 +8,9 @@ import android.os.CountDownTimer;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
     //インスタンス変数(メンバ変数)の宣言
     Enemy1 enemy1;
+    TextView textView;
 
     //MyCountDownTimerクラスの定義　CountDownTimerクラスを継承している
     public class MyCountDownTimer extends CountDownTimer {
@@ -71,6 +74,14 @@ public class MainActivity extends AppCompatActivity {
 
         //インスタンスの生成
         enemy1 = new Enemy1();
+
+        //imageButtonの参照値を取得する。findViewById()メソッドで。
+        ImageButton imageButton = (ImageButton) findViewById(R.id.imageButton);
+
+        DisplayMetrics dm = Resources.getSystem().getDisplayMetrics();
+        int height = dm.heightPixels;
+        imageButton.setY(height*65/100);
+
     }
 
     public void onClick(View v) {
@@ -124,6 +135,40 @@ public class MainActivity extends AppCompatActivity {
             if(x < 0 || x >= width)
                 dir = -dir;
         }
+    }
+
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        //imageButtonの参照値を取得する。findViewById()メソッドで。
+        ImageButton imageButton = (ImageButton) findViewById(R.id.imageButton);
+
+        //TextViewの参照値を取得する。findViewById()メソッドで。
+        TextView textView = (TextView)findViewById(R.id.textView);
+
+        int x = (int) event.getX();                //タッチしたＸ座標
+        int y = (int) event.getY();                //タッチしたＹ座標
+
+        textView.setText("X座標は "+x+"　Y座標は " + y);
+
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                  //imageButton.setX(x);
+                break;
+            case MotionEvent.ACTION_UP:
+
+                break;
+            case MotionEvent.ACTION_MOVE:
+                imageButton.setX(x);
+                break;
+            case MotionEvent.ACTION_CANCEL:
+
+                break;
+        }
+
+        return true;
+
     }
 
 }
