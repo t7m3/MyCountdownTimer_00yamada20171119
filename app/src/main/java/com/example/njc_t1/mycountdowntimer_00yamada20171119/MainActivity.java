@@ -8,6 +8,7 @@ import android.os.CountDownTimer;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,6 +20,8 @@ public class MainActivity extends AppCompatActivity {
     MyCountDownTimer mTimer;
     FloatingActionButton mFab;
     ImageViewEnemy imageViewEnemy;
+    ImageViewPlayer imageViewPlayer;
+    TextView textView;
 
     //インスタンス変数(メンバ変数)の宣言
     SoundPool mSoundPool;
@@ -72,6 +75,9 @@ public class MainActivity extends AppCompatActivity {
         mTimerText.setText("1:00"); //TextViewの表示の初期値の設定
         mTimer = new MyCountDownTimer(1* 60 * 1000, 100); //タイマのインスタンスの生成
 
+        //textViewの参照値を取得する。findViewById()メソッドで。
+        textView = (TextView)findViewById(R.id.textView);
+
         //imageViewEnemyの参照値を取得する。findViewById()メソッドで
         ImageView R_imageViewEnemy = (ImageView)findViewById(R.id.imageViewEnemy);
 
@@ -79,6 +85,14 @@ public class MainActivity extends AppCompatActivity {
         int x = 0;
         int y = screenHeight * 5/100;
         imageViewEnemy = new ImageViewEnemy(R_imageViewEnemy, x, y);
+
+        //imageViewPlayerの参照値を取得する。findViewById()メソッドで
+        ImageView R_imageViewPlayer = (ImageView)findViewById(R.id.imageViewPlayer);
+
+        //プレイヤーのインスタンスの生成
+        x = 0;
+        y = screenHeight * 60/100;
+        imageViewPlayer = new ImageViewPlayer(R_imageViewPlayer, x, y);
     }
 
     public void onClick(View v) {
@@ -110,6 +124,36 @@ public class MainActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause(); //親クラスのコンストラクタを呼び出す
         mSoundPool.release(); //メモリの解放
+    }
+
+    @Override
+    //画面タッチのメソッドの定義
+    public boolean onTouchEvent(MotionEvent event) {
+
+        int x = (int) event.getX();                //タッチした場所のＸ座標
+        int y = (int) event.getY();                //タッチした場所のＹ座標
+
+        textView.setText("X座標："+x+"　Y座標：" + y);
+
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                textView.append("　ACTION_DOWN");
+                imageViewPlayer.setX(x);
+                break;
+            case MotionEvent.ACTION_UP:
+                textView.append("　ACTION_UP");
+                break;
+            case MotionEvent.ACTION_MOVE:
+                textView.append("　ACTION_MOVE");
+                imageViewPlayer.setX(x);
+                break;
+            case MotionEvent.ACTION_CANCEL:
+                textView.append("　ACTION_CANCEL");
+                break;
+        }
+
+        return true;
+
     }
 
 
