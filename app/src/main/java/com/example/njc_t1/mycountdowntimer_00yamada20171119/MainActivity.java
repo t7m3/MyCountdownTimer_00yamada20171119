@@ -18,13 +18,16 @@ public class MainActivity extends AppCompatActivity {
     TextView mTimerText;
     MyCountDownTimer mTimer;
     FloatingActionButton mFab;
+    ImageViewEnemy imageViewEnemy;
 
     //インスタンス変数(メンバ変数)の宣言
     SoundPool mSoundPool;
     int mSoundResId;
 
-    //インスタンス変数(メンバ変数)の宣言
-    Enemy1 enemy1;
+    //画面の幅、高さを取得する
+    DisplayMetrics dm = Resources.getSystem().getDisplayMetrics();
+    int screenWidth = dm.widthPixels;
+    int screenHeight = dm.heightPixels;
 
     //MyCountDownTimerクラスの定義　CountDownTimerクラスを継承している
     public class MyCountDownTimer extends CountDownTimer {
@@ -45,9 +48,9 @@ public class MainActivity extends AppCompatActivity {
             long minute = millisUntilFinished / 1000 / 60; //残り時間の分を計算する。
             long second = millisUntilFinished / 1000 % 60; //残り時間の秒を計算する。
             mTimerText.setText(String.format("%1d:%2$02d", minute, second));
-                            //残り時間の分と秒を、TextViewに表示する。
-            //アニメーション
-            enemy1.Move(10);
+
+            //敵が左右に移動する。
+            imageViewEnemy.Move(10);
         }
 
         @Override
@@ -66,11 +69,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main); //activity_mainを表示する。
 
         mTimerText = (TextView) findViewById(R.id.timer_text); //TextViewの参照値を取得する。findViewById()メソッドで。
-        mTimerText.setText("3:00"); //TextViewの表示の初期値の設定
+        mTimerText.setText("1:00"); //TextViewの表示の初期値の設定
         mTimer = new MyCountDownTimer(1* 60 * 1000, 100); //タイマのインスタンスの生成
 
-        //インスタンスの生成
-        enemy1 = new Enemy1();
+        //imageViewEnemyの参照値を取得する。findViewById()メソッドで
+        ImageView R_imageViewEnemy = (ImageView)findViewById(R.id.imageViewEnemy);
+
+        //敵のインスタンスの生成
+        int x = 0;
+        int y = screenHeight * 5/100;
+        imageViewEnemy = new ImageViewEnemy(R_imageViewEnemy, x, y);
     }
 
     public void onClick(View v) {
@@ -104,27 +112,6 @@ public class MainActivity extends AppCompatActivity {
         mSoundPool.release(); //メモリの解放
     }
 
-    public class  Enemy1 {
-        int dir = +1;
-
-        ImageView imageview1 = (ImageView)findViewById(R.id.imageEnemy1);
-
-        public  void  Move(int vlue){
-
-            DisplayMetrics dm = Resources.getSystem().getDisplayMetrics();
-            int width = dm.widthPixels;
-            //int height = dm.heightPixels
-
-            width = width - imageview1.getWidth();
-
-            float x = imageview1.getX();
-            x = x + dir * vlue;
-            imageview1.setX(x);
-
-            if(x < 0 || x >= width)
-                dir = -dir;
-        }
-    }
 
 }
 
